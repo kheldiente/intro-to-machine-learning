@@ -39,7 +39,7 @@ except NameError:
 
 
 plt.scatter(ages, net_worths)
-# plt.show()
+plt.show()
 
 
 ### identify and remove the most outlier-y points
@@ -62,6 +62,7 @@ if len(cleaned_data) > 0:
     ### refit your cleaned data!
     try:
         reg.fit(ages, net_worths)
+        r2 = reg.score(ages_test, net_worths_test)
         print "\nslope: ", reg.coef_
         print "intercept: ", reg.intercept_
         print "r2 score: ", r2
@@ -73,7 +74,7 @@ if len(cleaned_data) > 0:
     plt.scatter(ages, net_worths)
     plt.xlabel("ages")
     plt.ylabel("net worths")
-    # plt.show()
+    plt.show()
 
 
 else:

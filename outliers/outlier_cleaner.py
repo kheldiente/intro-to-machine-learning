@@ -21,12 +21,15 @@ def outlierCleaner(predictions, ages, net_worths):
     c = []
     ### your code goes here
     for i in range(size):
-        a.append(ages[i]) # age
-        b.append(net_worths[i]) # net worth
-        c.append(net_worths[i] - predictions[i]) # error
+        a.extend(ages[i]) # age
+        b.extend(net_worths[i]) # net worth
+        c.extend(net_worths[i] - predictions[i]) # error
         t = [a[i], b[i], c[i]]
         cleaned_data.append(t)
-    cleaned_data = sorted(cleaned_data)
+    c = sorted(c, reverse=True)
+    # key = lambda x:x[2] indicates that cleaned_data should be sorted using c[] values (residual errors); see t
+    cleaned_data = sorted(cleaned_data, key=lambda x:x[2], reverse=True)
     get_ten_percent = len(cleaned_data) - (len(cleaned_data) * .10)
     print "length - ten percent: ", int(get_ten_percent)
+    print "\n###residual errors###\n", c
     return cleaned_data[:int(get_ten_percent)]
