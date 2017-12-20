@@ -42,34 +42,37 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
         ### only look at first 200 emails when developing
         ### once everything is working, remove this line to run over full dataset
         temp_counter += 1
-        if temp_counter < 200:
-            path = os.path.join('..', path[:-1])
-            print path
-            email = open(path, "r")
+        # if temp_counter < 10:
+        path = os.path.join('..', path[:-1])
+        # print path
+        email = open(path, "r")
 
-            ### use parseOutText to extract the text from the opened email
+        ### use parseOutText to extract the text from the opened email
+        parsed = parseOutText(email)
+        ### use str.replace() to remove any instances of the words
+        ### ["sara", "shackleton", "chris", "germani"]
+        for w in ["cgermannsf", "sshacklensf", "sara", "shackleton", "chris", "germani", "\n", "\r", "\t"]:
+            parsed = parsed.replace(w, ' ')
 
-            ### use str.replace() to remove any instances of the words
-            ### ["sara", "shackleton", "chris", "germani"]
-
-            ### append the text to word_data
-
-            ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
-
-
-            email.close()
+        ### append the text to word_data
+        ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
+        word_data.append(parsed)
+        from_data.append(0 if name == "sara" else 1)
+        email.close()
 
 print "emails processed"
+print word_data[0]
 from_sara.close()
 from_chris.close()
 
 pickle.dump( word_data, open("your_word_data.pkl", "w") )
 pickle.dump( from_data, open("your_email_authors.pkl", "w") )
 
-
-
-
-
 ### in Part 4, do TfIdf vectorization here
-
-
+""" Transform the word_data into a tf-idf matrix using the sklearn Tfidf transformation. Remove english stopwords """
+from sklearn.feature_extraction.text import TfidfVectorizer
+vectorizer = TfidfVectorizer(stop_words="english")
+vectorizer.fit_transform(word_data)
+features = vectorizer.get_feature_names()
+print len(features) # print list of all the words in the vocabulary
+print "features[34597]: ", features[34597]
